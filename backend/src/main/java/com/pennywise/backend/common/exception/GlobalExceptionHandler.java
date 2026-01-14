@@ -46,6 +46,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handle illegal argument exceptions (business rule violations).
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(
+            IllegalArgumentException ex) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.error(ex.getMessage()));
+    }
+
+    /**
      * Handle all other unexpected exceptions.
      */
     @ExceptionHandler(Exception.class)
