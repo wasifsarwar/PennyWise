@@ -1,0 +1,32 @@
+# ============================================
+# Development Overrides
+# ============================================
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# ============================================
+
+services:
+  db:
+    ports:
+      - "5432:5432"  # Expose to host for local development tools
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      # Enable SQL logging in dev
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: "true"
+      # Enable debug logging
+      LOGGING_LEVEL_COM_PENNYWISE: DEBUG
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB: DEBUG
+      # DevTools
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+    volumes:
+      # Mount source code for hot reload (requires Dockerfile.dev)
+      - ./backend/src:/app/src:ro
+      - ./backend/build.gradle.kts:/app/build.gradle.kts:ro
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Remote debug port
+

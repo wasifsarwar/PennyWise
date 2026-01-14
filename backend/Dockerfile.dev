@@ -1,0 +1,43 @@
+# ============================================
+# Development Dockerfile
+# ============================================
+# Supports hot reload with mounted source code
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+# ============================================
+
+FROM eclipse-temurin:21-jdk-alpine
+
+WORKDIR /app
+
+# Install required tools
+RUN apk add --no-cache bash curl
+
+# Create non-root user
+RUN addgroup -g 1001 -S pennywise && \
+    adduser -u 1001 -S pennywise -G pennywise
+
+# Copy Gradle wrapper and build files
+COPY --chown=pennywise:pennywise gradlew .
+COPY --chown=pennywise:pennywise gradle gradle
+COPY --chown=pennywise:pennywise build.gradle.kts .
+COPY --chown=pennywise:pennywise settings.gradle.kts .
+
+# Make gradlew executable
+RUN chmod +x ./gradlew
+
+# Download dependencies
+RUN ./gradlew dependencies --no-daemon || true
+
+# Copy source code
+COPY --chown=pennywise:pennywise src src
+
+# Switch to non-root user
+USER pennywise
+
+# Expose ports (app + debug)
+EXPOSE 8080 5005
+
+# Run with debug enabled and continuous build
+CMD ["./gradlew", "bootRun", "--no-daemon", \
+     "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]
+
