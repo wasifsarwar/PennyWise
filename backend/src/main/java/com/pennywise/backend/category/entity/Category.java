@@ -50,7 +50,7 @@ public class Category {
 
     @Column(length = 7)
     @Size(max = 7, message = "Color must be at most 7 characters")
-    @Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "Color must be a valid hex color (e.g., #FF5733)")
+    @Pattern(regexp = "^$|^#[0-9A-Fa-f]{6}$", message = "Color must be a valid hex color (e.g., #FF5733)")
     private String color;
 
     @Column(length = 255)
