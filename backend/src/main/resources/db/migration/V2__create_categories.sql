@@ -3,10 +3,10 @@
 -- Each user has their own set of categories with unique names
 
 CREATE TABLE categories (
-    id BIGSERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(100) NOT NULL,
-    user_id BIGINT NOT NULL,
-    parent_id BIGINT,
+    user_id UUID NOT NULL,
+    parent_id UUID,
     icon VARCHAR(50),
     color VARCHAR(7), -- Hex color code (e.g., #FF5733)
     description VARCHAR(255),

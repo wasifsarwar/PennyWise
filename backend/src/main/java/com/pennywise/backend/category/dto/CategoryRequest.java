@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,7 +18,7 @@ public class CategoryRequest {
     @Size(min = 1, max = 100, message = "Category name must be between 1 and 100 characters")
     private String name;
 
-    private Long parentId; // Optional - null means root category
+    private UUID parentId; // Optional - null means root category
 
     @Size(max = 50, message = "Icon must be at most 50 characters")
     private String icon;

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,7 +20,7 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryResponse createCategory(Long userId, CategoryRequest request) {
+    public CategoryResponse createCategory(UUID userId, CategoryRequest request) {
         // 1. Check if name already exists for this user
         if (categoryRepository.existsByUserIdAndName(userId, request.getName())) {
             throw new IllegalArgumentException("Category with name '" + request.getName() + "' already exists");
@@ -48,7 +49,7 @@ public class CategoryService {
         return toResponse(saved);
     }
 
-    public CategoryResponse getCategoryById(Long id, Long userId) {
+    public CategoryResponse getCategoryById(UUID id, UUID userId) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
 
@@ -59,7 +60,7 @@ public class CategoryService {
         return toResponse(category);
     }
 
-    public List<CategoryResponse> getCategoriesByUserId(Long userId) {
+    public List<CategoryResponse> getCategoriesByUserId(UUID userId) {
         List<Category> categories = categoryRepository.findByUserId(userId);
 
         return categories.stream()
@@ -67,7 +68,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryResponse> getRootCategoriesByUserId(Long userId) {
+    public List<CategoryResponse> getRootCategoriesByUserId(UUID userId) {
         List<Category> categories = categoryRepository.findByUserIdAndParentIsNull(userId);
 
         return categories.stream()
@@ -75,7 +76,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryResponse> getChildrenCategoriesByParentId(Long parentId) {
+    public List<CategoryResponse> getChildrenCategoriesByParentId(UUID parentId) {
         List<Category> categories = categoryRepository.findByParentId(parentId);
 
         return categories.stream()
@@ -83,7 +84,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public CategoryResponse updateCategory(Long id, Long userId, CategoryRequest request) {
+    public CategoryResponse updateCategory(UUID id, UUID userId, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
 
@@ -127,7 +128,7 @@ public class CategoryService {
         return toResponse(updated);
     }
 
-    public void deleteCategory(Long id, Long userId) {
+    public void deleteCategory(UUID id, UUID userId) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
 
@@ -151,7 +152,7 @@ public class CategoryService {
                 .build();
     }
 
-    private Category toEntity(CategoryRequest request, Long userId) {
+    private Category toEntity(CategoryRequest request, UUID userId) {
         return Category.builder()
                 .name(request.getName())
                 .userId(userId)

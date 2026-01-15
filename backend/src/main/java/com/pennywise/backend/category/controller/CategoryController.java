@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -21,7 +22,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(
-            @RequestHeader("X-User-Id") Long userId,
+            @RequestHeader("X-User-Id") UUID userId,
             @Valid @RequestBody CategoryRequest request) {
 
         CategoryResponse category = categoryService.createCategory(userId, request);
@@ -33,7 +34,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAllCategories(
-            @RequestHeader("X-User-Id") Long userId) {
+            @RequestHeader("X-User-Id") UUID userId) {
 
         List<CategoryResponse> categories = categoryService.getCategoriesByUserId(userId);
 
@@ -42,7 +43,7 @@ public class CategoryController {
 
     @GetMapping("/roots")
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getRootCategories(
-            @RequestHeader("X-User-Id") Long userId) {
+            @RequestHeader("X-User-Id") UUID userId) {
 
         List<CategoryResponse> categories = categoryService.getRootCategoriesByUserId(userId);
 
@@ -51,8 +52,8 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryById(
-            @PathVariable Long id,
-            @RequestHeader("X-User-Id") Long userId) {
+            @PathVariable UUID id,
+            @RequestHeader("X-User-Id") UUID userId) {
 
         CategoryResponse category = categoryService.getCategoryById(id, userId);
 
@@ -61,8 +62,8 @@ public class CategoryController {
 
     @GetMapping("/{id}/children")
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getChildrenCategories(
-            @PathVariable Long id,
-            @RequestHeader("X-User-Id") Long userId) {
+            @PathVariable UUID id,
+            @RequestHeader("X-User-Id") UUID userId) {
 
         // Verify category exists and belongs to user
         categoryService.getCategoryById(id, userId);
@@ -74,8 +75,8 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(
-            @PathVariable Long id,
-            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable UUID id,
+            @RequestHeader("X-User-Id") UUID userId,
             @Valid @RequestBody CategoryRequest request) {
 
         CategoryResponse category = categoryService.updateCategory(id, userId, request);
@@ -85,8 +86,8 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteCategory(
-            @PathVariable Long id,
-            @RequestHeader("X-User-Id") Long userId) {
+            @PathVariable UUID id,
+            @RequestHeader("X-User-Id") UUID userId) {
 
         categoryService.deleteCategory(id, userId);
 

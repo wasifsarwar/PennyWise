@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,9 +15,9 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryResponse {
 
-    private Long id;
+    private UUID id;
     private String name;
-    private Long parentId;
+    private UUID parentId;
     private String icon;
     private String color;
     private String description;
